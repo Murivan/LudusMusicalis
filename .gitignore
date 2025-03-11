@@ -162,8 +162,11 @@ cython_debug/
 #.idea/
 
 
-
-input
 output
 .DS_Store
 /ConcertTimeline/windows-amd64
+input/LudusMusicalis1DPI300Gamma.jpg
+input/LudusMusicalis2DPI300Gamma.jpg
+input/LudusMusicalis3DPI300Gamma.jpg
+input/LudusMusicalis3DPI300GammaCut.jpg
+input/LudusMusicalis4DPI300Gamma.jpg

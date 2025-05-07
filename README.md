@@ -5,6 +5,7 @@ The notebook is used to analyze a score from Roman Haubenstock-Ramati Ludus Musi
 Using Multi Template Matching the signs in the graphical score are recognized and tracked, and a MIDI rendering and a MusicXML transcription are produced.
 
 Instead of supplying a requirements.txt file to automatically install the dependencies comments in the code are used to provide information about what packages are needed, leaving the possibility to swap or omit them if not needed for a specific application.
+This has been tested with Python 3.12 on Windows and Mac.
 
 It is possible to analyze both image files or acquire images from a webcam.
 

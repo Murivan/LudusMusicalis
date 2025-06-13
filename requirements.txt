@@ -1,0 +1,12 @@
+-e . # installs processing code "editable", i.e., the current code is in vigour incl. edits
+line_profiler
+memory_profiler
+multi-template-matching
+opencv-python
+matplotlib
+splines
+pywebview
+python-rtmidi 
+mido
+music21
+cv2_enumerate_cameras

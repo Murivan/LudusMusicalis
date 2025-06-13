@@ -1,0 +1,13 @@
+# /path/to/your/processing/pyproject.toml
+[build-system]
+requires = ["setuptools>=61.0"] # Ensure setuptools is available to build
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "LudusMusicalis" # <-- Ensure this matches the module name you want to import
+version = "1.0.0"
+# Add other metadata if desired
+# dependencies = [] # List any external dependencies here
+
+[tool.setuptools.packages]
+find = { } # This tells setuptools to find the 'LudusMusicalis' package (because of __init__.py)

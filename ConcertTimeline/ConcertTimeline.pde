@@ -15,6 +15,8 @@ float barStartTime;
 int barDuration = 5; // Default duration for the green bar animation
 String inputText = "";
 
+float timelineThickness = 5; // You can change this to make bars thicker or thinner
+
 void setup() {
   fullScreen();  // Enable fullscreen mode
   textSize(32);
@@ -27,7 +29,6 @@ void draw() {
   if (!imageSelected) {
     fill(0, 255, 0);  // Bright green color for messages
     text("Press any key to select an image...", width / 2, height / 2);
-
   } else if (!boxSelected) {
     drawImageCentered(img);
 
@@ -42,12 +43,10 @@ void draw() {
 
     fill(0, 255, 0);  // Bright green messages
     text("Click & drag to draw a box. Press ENTER to confirm.", width / 2, height - 50);
-
   } else if (enteringBarDuration) {
     fill(0, 255, 0);  // Bright green color for messages
     text("Enter the bar animation duration (in seconds):", width / 2, height / 2 - 50);
     text(inputText + "_", width / 2, height / 2);
-
   } else if (!started) {
     drawImageCentered(img);
     fill(100, 200, 100);
@@ -56,8 +55,9 @@ void draw() {
     textSize(30);
     textAlign(CENTER, CENTER);
     text("Start", width / 2, height / 2);
-
   } else if (countdown >= 0) {
+    drawImageCentered(img); // Show image during countdown
+
     fill(0, 255, 0);  // Bright green countdown text
     textSize(width / 5);
     text(countdown, width / 2, height / 2);
@@ -71,29 +71,62 @@ void draw() {
       barX = boxX1;
       barStartTime = millis();
     }
-
   } else if (showBar) {
     drawImageCentered(img);
 
     float elapsed = (millis() - barStartTime) / 1000.0;
-    barX = map(elapsed, 0, barDuration, boxX1, boxX2);
+    float progress = constrain(elapsed / barDuration, 0, 1);
 
-    fill(0, 255, 0, 150);  // Green bar
-    // Ensure the green bar does not extend beyond the bounding box
-    rect(boxX1, 0, min(barX, boxX2) - boxX1, height);
+    noStroke();
+
+    // GREEN: Left to Right (vertical bar)
+    fill(0, 255, 0);
+    float greenX = boxX1 + (boxX2 - boxX1 - timelineThickness) * progress;
+    rect(greenX, boxY1, timelineThickness, boxY2 - boxY1);
+
+    // RED: Right to Left (vertical bar)
+    fill(255, 0, 0);
+    float redX = boxX2 - (boxX2 - boxX1 - timelineThickness) * progress - timelineThickness;
+    rect(redX, boxY1, timelineThickness, boxY2 - boxY1);
+
+    // BLUE: Top to Bottom (horizontal bar)
+    fill(0, 0, 255);
+    float blueY = boxY1 + (boxY2 - boxY1 - timelineThickness) * progress;
+    rect(boxX1, blueY, boxX2 - boxX1, timelineThickness);
+
+    // GREY: Bottom to Top (horizontal bar)
+    fill(128);
+    float greyY = boxY2 - (boxY2 - boxY1 - timelineThickness) * progress - timelineThickness;
+    rect(boxX1, greyY, boxX2 - boxX1, timelineThickness);
 
     if (elapsed >= barDuration) {
       showBar = false;
-      finished = true;  // Ensure the image remains visible
+      finished = true;
     }
-  } 
-  
+  }
+
+
+
   // Keep displaying the image even after the bar animation ends
   else if (finished) {
     drawImageCentered(img);
-    fill(0, 255, 0, 150);  // Green bar still visible after animation
-    // Ensure the green bar stays within the bounding box after completion
-    rect(boxX1, 0, min(barX, boxX2) - boxX1, height);
+    noStroke();
+
+    // GREEN: Left edge
+    fill(0, 255, 0);
+    rect(boxX2 - timelineThickness, boxY1, timelineThickness, boxY2 - boxY1);
+
+    // RED: Right edge
+    fill(255, 0, 0);
+    rect(boxX1, boxY1, timelineThickness, boxY2 - boxY1);
+
+    // BLUE: Bottom edge
+    fill(0, 0, 255);
+    rect(boxX1, boxY2 - timelineThickness, boxX2 - boxX1, timelineThickness);
+
+    // GREY: Top edge
+    fill(128);
+    rect(boxX1, boxY1, boxX2 - boxX1, timelineThickness);
   }
 }
 
@@ -134,12 +167,10 @@ void mouseReleased() {
 void keyPressed() {
   if (!imageSelected) {
     selectInput("Select an image:", "fileSelected");
-
   } else if (!boxSelected && key == ENTER) {
     boxSelected = true; // Confirm bounding box selection
 
     enteringBarDuration = true; // Move to entering bar animation duration step
-
   } else if (enteringBarDuration) {
     if (key >= '0' && key <= '9') {
       inputText += key;
